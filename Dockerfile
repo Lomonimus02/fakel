@@ -4,7 +4,7 @@ FROM node:20-alpine AS base
 
 # ========== DEPS: install npm packages ==========
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY prisma ./prisma/
@@ -19,15 +19,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+# Ограничиваем потребление памяти при сборке, чтобы VPS не завис
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 RUN npm run build
-
-# ========== MIGRATOR: for prisma migrate deploy ==========
-FROM base AS migrator
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=builder /app/prisma ./prisma/
-COPY --from=builder /app/prisma.config.ts ./
-CMD ["npx", "prisma", "migrate", "deploy"]
 
 # ========== RUNNER: production Next.js server ==========
 FROM base AS runner

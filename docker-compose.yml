@@ -1,37 +1,4 @@
 services:
-  app:
-    build:
-      context: .
-      target: runner
-    container_name: ironrent-app
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/ironrent?schema=public
-      - S3_ENDPOINT=http://minio:9000
-    depends_on:
-      postgres:
-        condition: service_started
-      minio:
-        condition: service_healthy
-
-  # Одноразовый контейнер для миграций
-  migrate:
-    build:
-      context: .
-      target: migrator
-    container_name: ironrent-migrate
-    environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/ironrent?schema=public
-    depends_on:
-      postgres:
-        condition: service_started
-    profiles:
-      - tools
-
   postgres:
     image: postgres:16-alpine
     container_name: ironrent-db
@@ -44,6 +11,23 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ironrent"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    build:
+      context: .
+      target: deps
+    container_name: ironrent-migrate
+    command: npx prisma migrate deploy
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/ironrent?schema=public
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   minio:
     image: minio/minio:latest
@@ -60,11 +44,10 @@ services:
     command: server /data --console-address ":9001"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Автоматическое создание бакета при старте
   minio-init:
     image: minio/mc:latest
     container_name: ironrent-minio-init
@@ -78,6 +61,25 @@ services:
       mc anonymous set download myminio/ironrent;
       echo 'Bucket ironrent created and configured for public access';
       "
+
+  app:
+    build:
+      context: .
+      target: runner
+    container_name: ironrent-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/ironrent?schema=public
+      - S3_ENDPOINT=http://minio:9000
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      minio-init:
+        condition: service_completed_successfully
 
 volumes:
   postgres_data:
