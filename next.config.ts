@@ -57,6 +57,16 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '20mb',
     },
+    // Запускаем webpack-компиляцию в отдельном воркере (параллельно
+
+
+    // Оптимизация тяжёлых barrel-экспортов (ускоряет tree-shaking)
+    optimizePackageImports: [
+      'lucide-react',
+      '@aws-sdk/client-s3',
+      'react-markdown',
+      'embla-carousel-react',
+    ],
   },
   // Для деплоя на Render
   output: 'standalone',
