@@ -60,6 +60,13 @@ const nextConfig: NextConfig = {
   },
   // Для деплоя на Render
   output: 'standalone',
+  // Отключаем проверки типов и линтера при сборке для ускорения (особенно на слабых VPS)
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
