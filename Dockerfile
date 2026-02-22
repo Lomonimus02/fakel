@@ -49,8 +49,8 @@ RUN mkdir -p ./public/uploads && chown -R nextjs:nodejs ./public/uploads
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy prisma schema for reference
-COPY --from=builder /app/prisma/schema.prisma ./prisma/
+# Copy prisma schema and migrations for `prisma migrate deploy`
+COPY --from=builder /app/prisma ./prisma/
 
 USER nextjs
 
