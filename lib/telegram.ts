@@ -57,6 +57,9 @@ export function formatLeadMessage(data: {
   interest?: string | null
   message?: string | null
   source?: string | null
+  taskType?: string | null
+  weight?: string | null
+  height?: string | null
 }): string {
   const lines = [
     '🔥 *НОВАЯ ЗАЯВКА*',
@@ -75,6 +78,18 @@ export function formatLeadMessage(data: {
 
   if (data.machine) {
     lines.push(`🚜 *Техника:* ${escapeMarkdown(data.machine)}`)
+  }
+
+  if (data.taskType) {
+    lines.push(`🏗 *Тип работ:* ${escapeMarkdown(data.taskType)}`)
+  }
+
+  if (data.weight) {
+    lines.push(`⚖️ *Вес груза:* ${escapeMarkdown(data.weight)} т`)
+  }
+
+  if (data.height) {
+    lines.push(`📏 *Высота подъёма:* ${escapeMarkdown(data.height)} м`)
   }
 
   if (data.message) {

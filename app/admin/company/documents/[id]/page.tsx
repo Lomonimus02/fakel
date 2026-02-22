@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { getDocument } from '@/lib/actions/company'
 import { DocumentForm } from '../DocumentForm'
 
+export const dynamic = 'force-dynamic';
+
 interface EditDocumentPageProps {
   params: Promise<{ id: string }>
 }

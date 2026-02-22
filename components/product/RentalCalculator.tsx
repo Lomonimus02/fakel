@@ -84,7 +84,7 @@ export function RentalCalculator({ shiftPrice, hourlyPrice }: RentalCalculatorPr
         <div className="flex items-center gap-3">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 transition flex items-center justify-center text-xl font-bold"
+            className="w-12 h-12 md:w-10 md:h-10 rounded-lg bg-white/5 hover:bg-white/10 active:bg-white/20 transition flex items-center justify-center text-2xl md:text-xl font-bold"
           >
             −
           </button>
@@ -97,7 +97,7 @@ export function RentalCalculator({ shiftPrice, hourlyPrice }: RentalCalculatorPr
           />
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 transition flex items-center justify-center text-xl font-bold"
+            className="w-12 h-12 md:w-10 md:h-10 rounded-lg bg-white/5 hover:bg-white/10 active:bg-white/20 transition flex items-center justify-center text-2xl md:text-xl font-bold"
           >
             +
           </button>

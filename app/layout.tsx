@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Oswald } from "next/font/google";
+import { CookieBanner } from "@/components/layout";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -17,13 +18,13 @@ const oswald = Oswald({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: {
-    default: "IRON RENT Спецтехника",
-    template: "%s | IRON RENT Спецтехника",
+    default: "Planteo — Аренда спецтехники",
+    template: "%s | Planteo — Аренда спецтехники",
   },
   description:
-    "Аренда строительной спецтехники премиум-класса в Санкт-Петербурге. Экскаваторы, краны, самосвалы с экипажем. Работаем 24/7.",
+    "Planteo — профессиональная аренда строительной и специальной техники в Санкт-Петербурге. Экскаваторы, краны, самосвалы с экипажем. Работаем 24/7.",
   keywords: [
     "аренда спецтехники",
     "аренда экскаватора",
@@ -31,12 +32,20 @@ export const metadata: Metadata = {
     "спецтехника СПб",
     "строительная техника",
   ],
-  authors: [{ name: "IRON RENT" }],
-  creator: "IRON RENT",
+  authors: [{ name: "Planteo" }],
+  creator: "Planteo",
   openGraph: {
     type: "website",
     locale: "ru_RU",
-    siteName: "IRON RENT Спецтехника",
+    siteName: "Planteo",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Аренда спецтехники",
+      },
+    ],
   },
   robots: {
     index: true,
@@ -61,6 +70,7 @@ export default function RootLayout({
         <div className="bg-noise" aria-hidden="true"></div>
 
         {children}
+        <CookieBanner />
       </body>
     </html>
   );

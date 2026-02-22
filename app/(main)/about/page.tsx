@@ -5,17 +5,17 @@ import { getCompanySettings, getActiveDocuments } from "@/lib/actions/company";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "О компании Iron Rent | Аренда спецтехники в СПб",
+  title: "О компании Planteo | Аренда спецтехники в СПб",
   description:
-    "Iron Rent — надёжный партнёр в аренде спецтехники. 10+ лет опыта, собственный парк из 50+ единиц техники, работа с НДС. Санкт-Петербург.",
+    "Planteo — надёжный партнёр в аренде спецтехники. 5 лет на рынке, работа с НДС 22%. Санкт-Петербург.",
 };
 
 const stats = [
   {
     icon: Building2,
-    value: "50+",
-    label: "единиц техники",
-    description: "Собственный парк",
+    value: "98%",
+    label: "заказов в срок",
+    description: "Точность исполнения",
   },
   {
     icon: Users,
@@ -25,15 +25,15 @@ const stats = [
   },
   {
     icon: TrendingUp,
-    value: "10",
+    value: "5",
     label: "лет на рынке",
     description: "Опыт и надёжность",
   },
   {
     icon: Award,
-    value: "98%",
-    label: "заказов в срок",
-    description: "Точность исполнения",
+    value: "2",
+    label: "года технике",
+    description: "Средний возраст",
   },
 ];
 
@@ -55,31 +55,31 @@ export default async function AboutPage() {
             <div>
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold uppercase mb-6">
                 О компании{" "}
-                <span className="text-accent">Iron Rent</span>
+                <span className="text-accent">Planteo</span>
               </h1>
               <div className="space-y-4 text-text-gray text-lg">
                 <p>
-                  <strong className="text-white">Iron Rent</strong> — лидер рынка
+                  <strong className="text-white">Planteo</strong> — лидер рынка
                   аренды строительной спецтехники в Санкт-Петербурге и
-                  Ленинградской области. Более 10 лет мы обеспечиваем
+                  Ленинградской области. Более 5 лет мы обеспечиваем
                   строительные объекты надёжной техникой и квалифицированными
                   операторами.
                 </p>
                 <p>
-                  Наш собственный парк насчитывает более 50 единиц современной
-                  техники: экскаваторы, автокраны, самосвалы, манипуляторы и
-                  погрузчики. Средний возраст машин — не более 5 лет, что
+                  Мы предлагаем современную
+                  технику: экскаваторы, автокраны, самосвалы, манипуляторы и
+                  погрузчики. Средний возраст машин — не более 2 лет, что
                   гарантирует бесперебойную работу на объекте.
                 </p>
                 <p>
-                  Мы официально работаем с НДС 20%, предоставляем полный пакет
+                  Мы официально работаем с НДС 22%, предоставляем полный пакет
                   закрывающих документов и готовы к сотрудничеству как с
                   крупными застройщиками, так и с частными заказчиками.
                 </p>
               </div>
               <div className="mt-8 flex flex-wrap gap-4">
                 <div className="bg-accent/10 border border-accent/30 rounded-lg px-4 py-2">
-                  <span className="text-accent font-bold">НДС 20%</span>
+                  <span className="text-accent font-bold">НДС 22%</span>
                 </div>
                 <div className="bg-white/5 border border-white/10 rounded-lg px-4 py-2">
                   <span className="text-text-gray">Полный документооборот</span>
@@ -95,14 +95,14 @@ export default async function AboutPage() {
               <div className="aspect-[4/3] rounded-xl overflow-hidden border border-white/10">
                 <img
                   src={aboutImage}
-                  alt="Строительная площадка Iron Rent"
+                  alt="Строительная площадка Planteo"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent" />
               </div>
               {/* Floating badge */}
               <div className="absolute -bottom-4 -left-4 bg-accent text-dark px-6 py-3 rounded-lg shadow-lg">
-                <span className="font-display font-bold text-2xl">10+</span>
+                <span className="font-display font-bold text-2xl">5+</span>
                 <span className="block text-xs uppercase font-bold">лет опыта</span>
               </div>
             </div>

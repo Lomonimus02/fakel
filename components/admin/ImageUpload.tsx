@@ -3,6 +3,9 @@
 import { useState, useRef } from 'react'
 import { Upload, X, Image as ImageIcon } from 'lucide-react'
 
+// Максимальный размер файла: 5 MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024
+
 interface ImageUploadProps {
   currentImage?: string | null
   name?: string
@@ -16,6 +19,13 @@ export default function ImageUpload({ currentImage, name = 'image' }: ImageUploa
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      // Клиентская валидация размера
+      if (file.size > MAX_FILE_SIZE) {
+        alert('Файл слишком большой. Максимум 5 МБ')
+        e.target.value = ''
+        return
+      }
+      
       setHasNewFile(true)
       const reader = new FileReader()
       reader.onloadend = () => {
@@ -49,7 +59,7 @@ export default function ImageUpload({ currentImage, name = 'image' }: ImageUploa
         ref={inputRef}
         type="file"
         name={name}
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp"
         onChange={handleFileChange}
         className="hidden"
         id={`file-upload-${name}`}

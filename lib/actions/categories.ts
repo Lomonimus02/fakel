@@ -33,7 +33,9 @@ export async function createCategory(formData: FormData) {
   const name = formData.get('name') as string
   const slug = formData.get('slug') as string
   const description = formData.get('description') as string | null
+  const seoTextBottom = formData.get('seoTextBottom') as string | null
   const imageUrl = formData.get('imageUrl') as string | null
+  const availableFiltersJson = formData.get('availableFilters') as string | null
 
   if (!name?.trim()) {
     return { error: 'Название категории обязательно' }
@@ -41,6 +43,16 @@ export async function createCategory(formData: FormData) {
 
   // Автогенерация slug если пусто
   const finalSlug = slug?.trim() || generateSlug(name)
+
+  // Парсим availableFilters
+  let availableFilters: string[] = []
+  if (availableFiltersJson) {
+    try {
+      availableFilters = JSON.parse(availableFiltersJson)
+    } catch {
+      availableFilters = []
+    }
+  }
 
   // Проверяем уникальность slug
   const existing = await prisma.category.findUnique({ where: { slug: finalSlug } })
@@ -54,7 +66,9 @@ export async function createCategory(formData: FormData) {
         name: name.trim(),
         slug: finalSlug,
         description: description?.trim() || null,
+        seoTextBottom: seoTextBottom?.trim() || null,
         imageUrl: imageUrl || null,
+        availableFilters: availableFilters,
       },
     })
   } catch (error) {
@@ -73,7 +87,9 @@ export async function createCategory(formData: FormData) {
 export async function updateCategory(id: number, formData: FormData) {
   const name = formData.get('name') as string
   const description = formData.get('description') as string | null
+  const seoTextBottom = formData.get('seoTextBottom') as string | null
   const imageUrl = formData.get('imageUrl') as string | null
+  const availableFiltersJson = formData.get('availableFilters') as string | null
 
   if (!name?.trim()) {
     return { error: 'Название категории обязательно' }
@@ -88,6 +104,16 @@ export async function updateCategory(id: number, formData: FormData) {
   // Используем существующий slug или генерируем новый из названия
   const slug = currentCategory.slug || generateSlug(name)
 
+  // Парсим availableFilters
+  let availableFilters: string[] = []
+  if (availableFiltersJson) {
+    try {
+      availableFilters = JSON.parse(availableFiltersJson)
+    } catch {
+      availableFilters = []
+    }
+  }
+
   try {
     await prisma.category.update({
       where: { id },
@@ -95,7 +121,9 @@ export async function updateCategory(id: number, formData: FormData) {
         name: name.trim(),
         slug: slug.trim(),
         description: description?.trim() || null,
+        seoTextBottom: seoTextBottom?.trim() || null,
         imageUrl: imageUrl || null,
+        availableFilters: availableFilters,
       },
     })
   } catch (error) {
@@ -107,7 +135,7 @@ export async function updateCategory(id: number, formData: FormData) {
   revalidatePath(`/admin/categories/${id}`)
   revalidatePath('/catalog')
   revalidatePath(`/catalog/${slug}`)
-  redirect('/admin/categories')
+  return { success: true }
 }
 
 /**
@@ -163,4 +191,61 @@ export async function getAllCategories() {
     },
     orderBy: { name: 'asc' },
   })
+}
+
+/**
+ * Получение связанных категорий для кросс-продаж
+ */
+export async function getRelatedCategories(categoryId: number) {
+  const relations = await prisma.relatedCategory.findMany({
+    where: { sourceCategoryId: categoryId },
+    include: {
+      targetCategory: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      },
+    },
+    orderBy: { createdAt: 'asc' },
+  })
+  
+  return relations.map(r => r.targetCategory)
+}
+
+/**
+ * Обновление связанных категорий для кросс-продаж
+ */
+export async function updateRelatedCategories(
+  sourceCategoryId: number,
+  targetCategoryIds: number[]
+) {
+  try {
+    // Удаляем все существующие связи
+    await prisma.relatedCategory.deleteMany({
+      where: { sourceCategoryId },
+    })
+    
+    // Создаём новые связи (исключаем self-reference)
+    const validTargetIds = targetCategoryIds.filter(id => id !== sourceCategoryId)
+    
+    if (validTargetIds.length > 0) {
+      await prisma.relatedCategory.createMany({
+        data: validTargetIds.map(targetCategoryId => ({
+          sourceCategoryId,
+          targetCategoryId,
+        })),
+      })
+    }
+    
+    revalidatePath('/admin/categories')
+    revalidatePath(`/admin/categories/${sourceCategoryId}`)
+    revalidatePath('/catalog')
+    
+    return { success: true }
+  } catch (error) {
+    console.error('Ошибка обновления связанных категорий:', error)
+    return { error: 'Ошибка при сохранении связанных категорий' }
+  }
 }

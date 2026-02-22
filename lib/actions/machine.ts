@@ -60,6 +60,37 @@ export async function saveMachine(formData: FormData) {
     specs = {}
   }
 
+  // Бейджи (JSON массив строк)
+  const badgesJson = formData.get('badges') as string
+  let badges: string[] = []
+  try {
+    badges = badgesJson ? JSON.parse(badgesJson) : []
+  } catch {
+    badges = []
+  }
+
+  // Грузовысотная схема
+  const loadChartUrlValue = formData.get('loadChartUrl') as string
+  const loadChartUrl = loadChartUrlValue || null
+
+  // Параметры для фильтрации
+  const liftingCapacityStr = formData.get('liftingCapacity') as string
+  const liftingCapacity = liftingCapacityStr ? parseFloat(liftingCapacityStr) : null
+  
+  const boomLengthStr = formData.get('boomLength') as string
+  const boomLength = boomLengthStr ? parseFloat(boomLengthStr) : null
+  
+  const bucketVolumeStr = formData.get('bucketVolume') as string
+  const bucketVolume = bucketVolumeStr ? parseFloat(bucketVolumeStr) : null
+  
+  const diggingDepthStr = formData.get('diggingDepth') as string
+  const diggingDepth = diggingDepthStr ? parseFloat(diggingDepthStr) : null
+  
+  const operatingWeightStr = formData.get('operatingWeight') as string
+  const operatingWeight = operatingWeightStr ? parseFloat(operatingWeightStr) : null
+  
+  const isAllTerrain = formData.get('isAllTerrain') === 'on'
+
   // Загрузка главного фото
   const imageFile = formData.get('image') as File | null
   const currentImageUrl = formData.get('currentImageUrl') as string | null
@@ -116,15 +147,24 @@ export async function saveMachine(formData: FormData) {
   const machineData = {
     title,
     slug,
-    categoryId,
+    category: { connect: { id: categoryId } },
     shiftPrice,
     hourlyPrice,
     description,
     specs,
+    badges,
+    loadChartUrl,
     imageUrl,
     images,
     isFeatured,
     isAvailable,
+    // Параметры для фильтрации
+    liftingCapacity,
+    boomLength,
+    bucketVolume,
+    diggingDepth,
+    operatingWeight,
+    isAllTerrain,
   }
 
   if (id) {
@@ -133,16 +173,91 @@ export async function saveMachine(formData: FormData) {
       where: { id },
       data: machineData,
     })
+    
+    // Сохраняем EAV атрибуты
+    await saveProductAttributes(id, formData)
   } else {
     // Создание новой записи
-    await prisma.machine.create({
+    const newMachine = await prisma.machine.create({
       data: machineData,
     })
+    
+    // Сохраняем EAV атрибуты для новой записи
+    await saveProductAttributes(newMachine.id, formData)
   }
 
   revalidatePath('/admin/machinery')
-  revalidatePath('/catalog')
+  revalidatePath('/catalog', 'layout')
+  revalidatePath('/', 'page')
   redirect('/admin/machinery')
+}
+
+/**
+ * Сохранение EAV-атрибутов для машины
+ */
+async function saveProductAttributes(machineId: number, formData: FormData) {
+  // Получаем JSON с атрибутами из формы
+  const attributesJson = formData.get('productAttributes') as string
+  if (!attributesJson) return
+  
+  let attributes: Array<{ attributeId: number; valueNumber: number | null; valueString: string | null }>
+  try {
+    attributes = JSON.parse(attributesJson)
+  } catch {
+    return
+  }
+  
+  // Удаляем старые значения
+  await prisma.productAttributeValue.deleteMany({
+    where: { machineId },
+  })
+  
+  // Создаём новые значения (только если есть хоть какое-то значение)
+  const validAttributes = attributes.filter(
+    attr => attr.valueNumber !== null || (attr.valueString && attr.valueString.trim())
+  )
+  
+  if (validAttributes.length > 0) {
+    await prisma.productAttributeValue.createMany({
+      data: validAttributes.map(attr => ({
+        machineId,
+        attributeId: attr.attributeId,
+        valueNumber: attr.valueNumber,
+        valueString: attr.valueString?.trim() || null,
+      })),
+    })
+  }
+}
+
+/**
+ * Получение машины с атрибутами для редактирования
+ */
+export async function getMachineWithAttributes(machineId: number) {
+  const machine = await prisma.machine.findUnique({
+    where: { id: machineId },
+    include: {
+      attributes: {
+        include: {
+          attribute: true,
+        },
+      },
+    },
+  })
+  
+  return machine
+}
+
+/**
+ * Получение атрибутов категории для формы
+ */
+export async function getCategoryAttributesForForm(categoryId: number) {
+  return prisma.categoryAttribute.findMany({
+    where: { categoryId },
+    include: {
+      attribute: true,
+    },
+    orderBy: { order: 'asc' },
+  })
 }
 
 export async function deleteMachine(id: number) {
@@ -151,6 +266,7 @@ export async function deleteMachine(id: number) {
   })
 
   revalidatePath('/admin/machinery')
-  revalidatePath('/catalog')
+  revalidatePath('/catalog', 'layout')
+  revalidatePath('/', 'page')
   redirect('/admin/machinery')
 }

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Settings, Truck, FileText, Building2 } from 'lucide-react'
+import { Settings, Truck, FileText, Building2, Phone, User, MessageSquare, SlidersHorizontal } from 'lucide-react'
 import { logout } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,7 @@ export default function AdminPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-white">Админ-панель</h1>
-            <p className="text-gray-400 mt-1">Iron Rent — управление сайтом</p>
+            <p className="text-gray-400 mt-1">Planteo — управление сайтом</p>
           </div>
           <form action={logout}>
             <button
@@ -68,6 +68,20 @@ export default function AdminPage() {
             </p>
           </Link>
 
+          {/* Атрибуты */}
+          <Link
+            href="/admin/attributes"
+            className="bg-surface rounded-xl border border-white/10 p-6 hover:border-accent/50 transition-all group"
+          >
+            <div className="w-12 h-12 bg-indigo-500/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-indigo-500 transition-colors">
+              <SlidersHorizontal className="w-6 h-6 text-indigo-400 group-hover:text-white transition-colors" />
+            </div>
+            <h2 className="text-lg font-semibold text-white mb-2">Атрибуты</h2>
+            <p className="text-gray-400 text-sm">
+              Характеристики техники: грузоподъемность, объём ковша и др.
+            </p>
+          </Link>
+
           {/* О компании */}
           <Link
             href="/admin/company"
@@ -79,6 +93,48 @@ export default function AdminPage() {
             <h2 className="text-lg font-semibold text-white mb-2">О компании</h2>
             <p className="text-gray-400 text-sm">
               Фото компании, лицензии и допуски
+            </p>
+          </Link>
+
+          {/* Отзывы */}
+          <Link
+            href="/admin/reviews"
+            className="bg-surface rounded-xl border border-white/10 p-6 hover:border-accent/50 transition-all group"
+          >
+            <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-yellow-500 transition-colors">
+              <MessageSquare className="w-6 h-6 text-yellow-400 group-hover:text-white transition-colors" />
+            </div>
+            <h2 className="text-lg font-semibold text-white mb-2">Отзывы</h2>
+            <p className="text-gray-400 text-sm">
+              Управление отзывами клиентов
+            </p>
+          </Link>
+
+          {/* Настройки сайта */}
+          <Link
+            href="/admin/settings"
+            className="bg-surface rounded-xl border border-white/10 p-6 hover:border-accent/50 transition-all group"
+          >
+            <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-orange-500 transition-colors">
+              <Phone className="w-6 h-6 text-orange-400 group-hover:text-white transition-colors" />
+            </div>
+            <h2 className="text-lg font-semibold text-white mb-2">Настройки сайта</h2>
+            <p className="text-gray-400 text-sm">
+              Контакты, телефон, адрес и другие настройки
+            </p>
+          </Link>
+
+          {/* Профиль */}
+          <Link
+            href="/admin/profile"
+            className="bg-surface rounded-xl border border-white/10 p-6 hover:border-accent/50 transition-all group"
+          >
+            <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-cyan-500 transition-colors">
+              <User className="w-6 h-6 text-cyan-400 group-hover:text-white transition-colors" />
+            </div>
+            <h2 className="text-lg font-semibold text-white mb-2">Профиль</h2>
+            <p className="text-gray-400 text-sm">
+              Смена пароля администратора
             </p>
           </Link>
         </div>

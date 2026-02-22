@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-import { FileText, CreditCard, Clock } from "lucide-react";
+import { FileText, CreditCard, Clock, Download } from "lucide-react";
+import { getSiteSettings } from "@/lib/get-settings";
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Условия аренды",
   description:
-    "Условия аренды спецтехники: документооборот, оплата с НДС 20%, минимальная смена 7+1. Работаем по договору с полным пакетом документов.",
+    "Условия аренды спецтехники: документооборот, оплата с НДС 22%, минимальная смена 7+1. Работаем по договору с полным пакетом документов.",
 };
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const settings = await getSiteSettings();
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
@@ -30,7 +34,7 @@ export default function TermsPage() {
             <CreditCard className="text-accent mb-4" size={40} />
             <h3 className="text-xl font-bold uppercase mb-2">Оплата</h3>
             <p className="text-text-gray">
-              Работаем с НДС 20% и без НДС. Возможна постоплата для постоянных
+              Работаем с НДС 22% и без НДС. Возможна постоплата для постоянных
               клиентов. Принимаем наличные и безналичные платежи.
             </p>
           </div>
@@ -59,9 +63,24 @@ export default function TermsPage() {
             </p>
           </div>
           <div className="flex gap-4">
-            <button className="bg-dark text-white hover:bg-white hover:text-dark px-6 py-3 rounded font-bold uppercase transition">
-              Скачать PDF
-            </button>
+            {settings.contractUrl ? (
+              <a
+                href={settings.contractUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-dark text-white hover:bg-white hover:text-dark px-6 py-3 rounded font-bold uppercase transition inline-flex items-center gap-2"
+              >
+                <Download size={18} />
+                Скачать PDF
+              </a>
+            ) : (
+              <button
+                disabled
+                className="bg-dark/50 text-white/50 px-6 py-3 rounded font-bold uppercase cursor-not-allowed"
+              >
+                Скачать PDF
+              </button>
+            )}
           </div>
         </div>
       </div>

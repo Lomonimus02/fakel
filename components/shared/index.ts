@@ -1,1 +1,8 @@
 export { LeadForm } from './LeadForm'
+export { MobileSwiper } from './MobileSwiper'
+export { OptimizedImage } from './OptimizedImage'
+export { SearchBar } from './SearchBar'
+export { Breadcrumbs, type BreadcrumbItem } from './Breadcrumbs'
+export { TelegramIcon } from './TelegramIcon'
+export { WhatsAppIcon } from './WhatsAppIcon'
+export { YandexMapWidget } from './YandexMapWidget'

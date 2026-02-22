@@ -1,200 +1,162 @@
 'use client'
 
-import { useState } from "react"
-import { Zap, Star, Shovel, ArrowUpFromLine, Truck, Calculator, X } from "lucide-react"
-import { LeadForm } from "@/components/shared/LeadForm"
+import { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Zap, X, MessageSquare, Truck, Percent } from 'lucide-react'
+import { LeadForm } from '@/components/shared/LeadForm'
 
-// Задачи для intent-based навигации
-const tasks = [
-  { 
-    icon: Shovel, 
-    label: "Копать", 
-    interest: "Экскаватор",
-    description: "Экскаваторы"
-  },
-  { 
-    icon: ArrowUpFromLine, 
-    label: "Поднимать", 
-    interest: "Автокран",
-    description: "Автокраны"
-  },
-  { 
-    icon: Truck, 
-    label: "Возить", 
-    interest: "Самосвал",
-    description: "Самосвалы"
-  },
-]
+const NAV_CARDS = [
+  { icon: MessageSquare, label: 'Отзывы клиентов', href: '#reviews' },
+  { icon: Truck, label: 'Наш автопарк', href: '/catalog' },
+  { icon: Percent, label: 'Скидки при долгосрочной аренде', href: '/services' },
+] as const
+
+const HERO_IMAGE = '/hero.png'
+
+
 
 export function HeroSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedTask, setSelectedTask] = useState<string | null>(null)
-
-  const handleTaskClick = (interest: string) => {
-    setSelectedTask(prev => prev === interest ? null : interest)
-  }
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-  }
 
   return (
-    <section className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden -mt-20 pt-20">
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?q=80&w=2070&auto=format&fit=crop"
-          className="w-full h-full object-cover opacity-30 grayscale"
-          alt="Строительная площадка"
+    <section className="relative min-h-screen overflow-hidden bg-dark -mt-20 pt-20">
+      {/* ── Mobile background (< lg) ── */}
+      <div className="absolute inset-0 lg:hidden">
+        <Image
+          src={HERO_IMAGE}
+          alt="Аренда спецтехники в Санкт-Петербурге — автокраны, экскаваторы, погрузчики на объекте"
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+          priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/80 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/50 to-transparent"></div>
+        {/* Heavy dark overlay so white text reads well */}
+        <div className="absolute inset-0 bg-dark/85" />
       </div>
 
-      <div className="container mx-auto px-4 z-10 relative grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-        {/* Text Content */}
-        <div className="space-y-5 md:space-y-6">
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1 rounded text-xs font-bold uppercase tracking-widest text-accent">
-            <Zap size={14} />
-            Подача техники от 45 минут
-          </div>
+      {/* ── Radial glow behind heading ── */}
+      <div className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] pointer-events-none z-0 hidden lg:block"></div>
 
-          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold uppercase leading-none">
-            Мощь для вашего <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-600">
-              масштаба
-            </span>
+      {/* ── Desktop semicircular image (≥ lg) ── */}
+      <div className="absolute right-0 top-0 hidden h-full w-[55%] bg-dark lg:block [clip-path:ellipse(100%_100%_at_100%_50%)] will-change-transform [transform:translateZ(0)_scale(1.002)]">
+        <Image
+          src={HERO_IMAGE}
+          alt="Аренда спецтехники в Санкт-Петербурге — автокраны, экскаваторы, погрузчики на объекте"
+          fill
+          sizes="55vw"
+          className="object-cover object-center"
+          priority
+        />
+        {/* Gradient fade into the dark left side */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-dark via-dark/60 to-transparent" />
+      </div>
+
+      {/* ── Content ── */}
+      <div className="relative z-10 container mx-auto flex h-full min-h-screen flex-col justify-center px-4 pt-24 pb-52">
+        <div className="lg:w-1/2 flex flex-col justify-center">
+          {/* SEO H1 Badge */}
+          <h1 className="self-start inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/50 text-accent text-xs sm:text-sm font-bold tracking-widest uppercase mb-6">
+            <Zap size={14} className="flex-shrink-0 fill-accent" />
+            Профессиональная аренда спецтехники в&nbsp;СПб
           </h1>
 
-          <p className="text-base md:text-lg text-text-gray max-w-md border-l-2 border-accent pl-4">
-            Аренда строительной техники с экипажем. Без скрытых платежей.
-            Работаем с НДС. Замена техники за 2 часа при поломке.
+          {/* Emotional headline */}
+          <div className="font-display font-bold text-5xl md:text-6xl lg:text-7xl uppercase leading-none text-white mb-2">
+            Ваша стройка не встанет.
+          </div>
+
+          {/* Accent subheading */}
+          <div className="font-display font-bold text-5xl md:text-6xl lg:text-7xl uppercase leading-none text-accent mb-6">
+            Техника на объекте через 2 часа.
+          </div>
+
+          {/* Description */}
+          <p className="text-lg md:text-xl text-gray-300 font-medium mb-10 max-w-xl leading-relaxed">
+            Фиксируем цену в договоре. Собственный парк техники. Работаем с&nbsp;НДС -22% (полный пакет документов).
           </p>
 
-          {/* Intent-based Navigation */}
-          <div className="space-y-4 pt-2">
-            {/* Task Buttons Grid */}
-            <div className="grid grid-cols-3 gap-2 md:gap-3">
-              {tasks.map((task) => {
-                const isActive = selectedTask === task.interest
-                return (
-                  <button
-                    key={task.label}
-                    type="button"
-                    onClick={() => handleTaskClick(task.interest)}
-                    className={`group bg-surface/50 backdrop-blur border rounded-lg p-3 md:p-4 text-center transition-all ${
-                      isActive 
-                        ? 'border-accent bg-accent/20 ring-2 ring-accent/50' 
-                        : 'border-white/10 hover:border-accent hover:bg-accent/10'
-                    }`}
-                  >
-                    <task.icon 
-                      size={24} 
-                      className={`mx-auto mb-1 md:mb-2 transition-colors ${
-                        isActive ? 'text-accent' : 'text-text-gray group-hover:text-accent'
-                      }`} 
-                    />
-                    <span className={`block text-xs md:text-sm font-bold uppercase transition-colors ${
-                      isActive ? 'text-accent' : 'text-text-gray group-hover:text-accent'
-                    }`}>
-                      {task.label}
-                    </span>
-                    <span className="hidden md:block text-[10px] text-gray-500 mt-1">
-                      {task.description}
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
+          {/* CTA */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="w-full cursor-pointer rounded-lg bg-accent px-8 py-5 font-display text-xl font-bold uppercase text-dark shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-transform hover:scale-105 md:w-max"
+          >
+            Подобрать технику за 5 минут
+          </button>
 
-            {/* Main CTA Button */}
-            <button
-              onClick={handleOpenModal}
-              className="w-full btn-industrial bg-accent hover:bg-accent-hover text-dark font-display font-bold text-lg md:text-xl uppercase py-3 md:py-4 rounded-lg shadow-glow flex items-center justify-center gap-3 transition-all"
-            >
-              <Calculator size={22} />
-              Получить расчёт
-            </button>
-
-            {/* Trust hint */}
-            <p className="text-xs text-gray-500 text-center">
-              Бесплатный расчёт • Ответим за 5 минут
-            </p>
-          </div>
+          {/* Trust trigger */}
+          <p className="text-sm text-gray-500 mt-4 font-medium tracking-wide flex items-center gap-2">
+            <span>Бесплатный расчет</span>
+            <span className="text-gray-600">•</span>
+            <span>Работаем 24/7</span>
+          </p>
         </div>
+      </div>
 
-        {/* Hero Image/Visual */}
-        <div className="hidden md:block relative">
-          {/* Decorative circles */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/20 rounded-full blur-[100px]"></div>
-
-          {/* Excavator Image */}
-          <img
-            src="https://pngimg.com/d/excavator_PNG59.png"
-            className="relative z-10 w-full drop-shadow-2xl"
-            alt="JCB Экскаватор"
-          />
-
-          {/* Floating Badge */}
-          <div className="absolute top-20 right-0 bg-surface/90 backdrop-blur border border-white/10 p-4 rounded shadow-card z-20">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                <Star className="text-accent" size={24} />
-              </div>
-              <div>
-                <div className="text-2xl font-display font-bold">500+</div>
-                <div className="text-xs text-text-gray uppercase">
-                  Единиц в парке
-                </div>
-              </div>
-            </div>
+      {/* ── Quick Navigation Cards ── */}
+      <div className="absolute bottom-0 left-0 z-20 w-full pb-6 lg:bottom-10 hidden lg:block">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:gap-8">
+            {NAV_CARDS.map(({ icon: Icon, label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group flex items-center gap-4 rounded-xl border border-white/5 bg-[#1A1D24] p-6 backdrop-blur-md transition-all hover:border-accent/50 hover:shadow-[0_0_15px_rgba(255,215,0,0.1)]"
+              >
+                <Icon className="h-10 w-10 flex-shrink-0 text-accent transition-colors group-hover:text-accent" />
+                <span className="font-display text-xl font-bold uppercase tracking-wide text-white transition-colors group-hover:text-white">
+                  {label}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Lead Form Modal */}
+      {/* Mobile: cards in flow */}
+      <div className="relative z-20 -mt-10 px-4 pb-10 lg:hidden">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 gap-4">
+            {NAV_CARDS.map(({ icon: Icon, label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group flex items-center gap-4 rounded-xl border border-white/5 bg-[#1A1D24] p-6 backdrop-blur-md transition-all hover:border-accent/50 hover:shadow-[0_0_15px_rgba(255,215,0,0.1)]"
+              >
+                <Icon className="h-10 w-10 flex-shrink-0 text-accent transition-colors group-hover:text-accent" />
+                <span className="font-display text-xl font-bold uppercase tracking-wide text-white transition-colors group-hover:text-white">
+                  {label}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Lead-form modal ── */}
       {isModalOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={handleCloseModal}
+          onClick={() => setIsModalOpen(false)}
         >
-          {/* Backdrop */}
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-          
-          {/* Modal Content */}
-          <div 
-            className="relative bg-surface border border-white/10 rounded-xl p-6 md:p-8 w-full max-w-md shadow-2xl"
+          <div
+            className="relative w-full max-w-md rounded-xl border border-white/10 bg-surface p-6 shadow-2xl md:p-8"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
-              onClick={handleCloseModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 text-gray-400 transition-colors hover:text-white"
             >
               <X size={24} />
             </button>
-
-            {/* Title */}
-            <h3 className="font-display text-2xl font-bold mb-2">
-              Получите расчёт
-            </h3>
-            <p className="text-text-gray mb-6">
-              {selectedTask 
-                ? `Вы выбрали: ${selectedTask}. Оставьте контакт — мы перезвоним.`
-                : 'Оставьте контакт — мы перезвоним за 5 минут.'}
-            </p>
-
-            {/* Lead Form */}
+            <h3 className="font-display text-2xl font-bold mb-2">Получите расчёт</h3>
+            <p className="text-text-gray mb-6">Оставьте контакт — мы перезвоним за 5 минут.</p>
             <LeadForm
-              source="Hero Selection"
-              initialInterest={selectedTask}
+              source="Hero Modal"
               buttonText="Получить расчёт"
               showMessage={false}
-              onSuccess={handleCloseModal}
+              onSuccess={() => setIsModalOpen(false)}
             />
           </div>
         </div>

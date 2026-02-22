@@ -17,14 +17,44 @@ model Category {
   name        String    // Название категории (напр. "Экскаваторы")
   slug        String    @unique // URL-friendly идентификатор (напр. "excavators")
   description String?   // Описание категории для SEO
+  seoTextBottom String? @db.Text // SEO-текст для отображения внизу страницы категории
   imageUrl    String?   // URL изображения категории
+  
+  // Настройки фильтров для этой категории
+  // Массив ключей доступных фильтров: ["liftingCapacity", "boomLength", "bucketVolume", "diggingDepth", "operatingWeight"]
+  availableFilters Json @default("[]")
+  
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   
   // Связь с техникой
   machines    Machine[]
   
+  // EAV-атрибуты категории
+  attributes  CategoryAttribute[]
+  
+  // Кросс-продажи: связанные категории (self-referential many-to-many)
+  relatedFrom RelatedCategory[] @relation("RelatedFrom") // Категории, которые ссылаются на эту
+  relatedTo   RelatedCategory[] @relation("RelatedTo")   // Категории, на которые ссылается эта
+  
   @@map("categories")
+}
+
+// Связь кросс-продаж между категориями (для системы рекомендаций)
+model RelatedCategory {
+  id               Int      @id @default(autoincrement())
+  sourceCategoryId Int      // Исходная категория (напр. "Краны")
+  targetCategoryId Int      // Целевая категория для рекомендаций (напр. "Манипуляторы")
+  
+  sourceCategory   Category @relation("RelatedTo", fields: [sourceCategoryId], references: [id], onDelete: Cascade)
+  targetCategory   Category @relation("RelatedFrom", fields: [targetCategoryId], references: [id], onDelete: Cascade)
+  
+  createdAt        DateTime @default(now())
+  
+  @@unique([sourceCategoryId, targetCategoryId]) // Уникальная связь между парой категорий
+  @@index([sourceCategoryId])
+  @@index([targetCategoryId])
+  @@map("related_categories")
 }
 
 // Единица техники
@@ -50,6 +80,18 @@ model Machine {
   imageUrl    String?   // Главное фото
   images      String[]  // Галерея фото (массив URL)
   
+  // Бейджи и дополнительные материалы
+  badges      Json      @default("[]") // Массив бейджей: ["owner", "hit", "new", "sale"]
+  loadChartUrl String?  // Ссылка на грузовысотную схему (PDF или изображение)
+  
+  // Параметры для фильтрации (краны и спецтехника)
+  liftingCapacity Float?   // Грузоподъемность в тоннах
+  boomLength      Float?   // Длина стрелы в метрах
+  bucketVolume    Float?   // Объем ковша в м³
+  diggingDepth    Float?   // Глубина копания в метрах
+  operatingWeight Float?   // Эксплуатационная масса в тоннах
+  isAllTerrain    Boolean  @default(false) // Вездеход (true) или Шоссейник (false)
+  
   // Флаги
   isFeatured  Boolean   @default(false) // Показывать на главной
   isAvailable Boolean   @default(true)  // Доступна для аренды
@@ -57,9 +99,18 @@ model Machine {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   
+  // EAV-атрибуты техники
+  attributes  ProductAttributeValue[]
+  
   @@index([categoryId])
   @@index([isFeatured])
   @@index([isAvailable])
+  @@index([liftingCapacity])
+  @@index([boomLength])
+  @@index([bucketVolume])
+  @@index([diggingDepth])
+  @@index([operatingWeight])
+  @@index([isAllTerrain])
   @@map("machines")
 }
 
@@ -77,6 +128,11 @@ model Lead {
   interest  String?    // Интерес клиента (напр. "Экскаватор", "Автокран")
   message   String?    @db.Text // Комментарий клиента
   source    String?    // Откуда пришла заявка (форма, звонок и т.д.)
+  
+  // Дополнительные детали для кранов и спецтехники
+  taskType  String?    // Тип работ: Монтаж, Погрузка, Земляные работы и т.д.
+  weight    String?    // Вес груза (например "5т")
+  height    String?    // Высота подъема (например "20м")
   
   // Статус обработки
   status    LeadStatus @default(NEW)
@@ -119,4 +175,105 @@ model Document {
   updatedAt DateTime  @updatedAt
   
   @@map("documents")
+}
+
+// Администратор системы
+model AdminUser {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  @@map("admin_users")
+}
+
+// Настройки сайта (singleton - одна запись с id=1)
+model SiteSettings {
+  id           Int       @id @default(1)
+  
+  // Контактные данные
+  phone        String    // Основной телефон
+  email        String    // Email для связи
+  address      String    // Адрес офиса
+  workingHours String    // Режим работы
+  
+  // Мессенджеры
+  telegramUrl  String?   // Ссылка на Telegram
+  whatsappUrl  String?   // Ссылка на WhatsApp
+  
+  // Карта
+  mapIframe    String?   @db.Text // HTML код для встраивания карты
+  
+  // Документы
+  contractUrl  String?   // Ссылка на PDF типового договора
+  
+  updatedAt    DateTime  @updatedAt
+  
+  @@map("site_settings")
+}
+
+// Отзывы клиентов
+model Review {
+  id        Int       @id @default(autoincrement())
+  author    String    // Имя клиента или название компании
+  role      String?   // Должность (напр. "Гл. инженер ООО СтройТрест")
+  text      String    @db.Text // Текст отзыва
+  rating    Int       @default(5) // Оценка (1-5)
+  isVisible Boolean   @default(true) // Показывать на сайте
+  scanUrl   String?   // Ссылка на скан благодарственного письма (IMG/PDF)
+  
+  createdAt DateTime  @default(now())
+  
+  @@map("reviews")
+}
+
+// ==================== EAV-АТРИБУТЫ ====================
+
+// Атрибут (характеристика) техники
+model Attribute {
+  id          Int      @id @default(autoincrement())
+  name        String   // Название: "Грузоподъемность", "Длина стрелы"
+  slug        String   @unique // Для URL фильтров: "lifting_capacity"
+  type        String   // "number", "string", "select" (тип данных)
+  unit        String?  // "т", "м", "м³" (единица измерения)
+  
+  categories  CategoryAttribute[]
+  values      ProductAttributeValue[]
+  
+  @@map("attributes")
+}
+
+// Привязка атрибута к категории
+model CategoryAttribute {
+  id          Int       @id @default(autoincrement())
+  categoryId  Int
+  attributeId Int
+  isFilter    Boolean   @default(false) // Использовать ли в фильтрах каталога?
+  showInCard  Boolean   @default(false) // Показывать ли на карточке товара?
+  order       Int       @default(0)     // Порядок сортировки в админке/фильтрах
+
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, attributeId]) // Атрибут уникален для категории
+  @@map("category_attributes")
+}
+
+// Значение атрибута для конкретной единицы техники
+model ProductAttributeValue {
+  id          String    @id @default(cuid())
+  machineId   Int
+  attributeId Int
+  
+  valueNumber Float?    // Если тип number
+  valueString String?   // Если тип string/select
+  
+  machine     Machine   @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  @@unique([machineId, attributeId])
+  @@index([attributeId])
+  @@map("product_attribute_values")
 }

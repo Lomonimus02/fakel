@@ -1,7 +1,12 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+html {
+  scroll-behavior: smooth;
+}
 
 @theme inline {
-  /* Colors from IRON RENT design */
+  /* Colors from Planteo design */
   --color-dark: #0F1115;
   --color-surface: #181B21;
   --color-accent: #FFD700;
@@ -24,8 +29,8 @@ body {
   overflow-x: hidden;
 }
 
-/* Эффект шума для текстуры бетона */
-.bg-noise {
+/* Эффект шума для текстуры бетона - ВРЕМЕННО ОТКЛЮЧЕНО */
+/* .bg-noise {
   position: fixed;
   top: 0;
   left: 0;
@@ -34,8 +39,8 @@ body {
   pointer-events: none;
   z-index: 0;
   opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
-}
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+} */
 
 /* Кнопки с эффектом скошенного угла (Industrial Look) */
 .btn-industrial {
@@ -80,6 +85,33 @@ body {
   animation: pulse-green 2s infinite;
 }
 
+/* Highlight animation for search result cards */
+@keyframes highlight-pulse {
+  0% { 
+    border-color: rgba(255, 215, 0, 1);
+  }
+  50% { 
+    border-color: rgba(255, 215, 0, 0.5);
+  }
+  100% { 
+    border-color: rgba(255, 215, 0, 1);
+  }
+}
+
+.animate-pulse-once {
+  animation: highlight-pulse 0.8s ease-in-out 3;
+}
+
+/* Marquee animation for trust triggers on mobile */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -93,6 +125,15 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #FFD700;
+}
+
+/* Hide scrollbar for horizontal swipe containers */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Views Handling */

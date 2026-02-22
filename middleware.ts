@@ -11,13 +11,21 @@ const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'your-super-secret-key-change-in-production'
 )
 
+interface SessionPayload {
+  userId: number
+  email: string
+  isAdmin: boolean
+  exp: number
+  iat: number
+}
+
 /**
  * Верифицирует JWT токен
  */
-async function verifyToken(token: string) {
+async function verifyToken(token: string): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET)
-    return payload
+    return payload as unknown as SessionPayload
   } catch {
     return null
   }
@@ -26,10 +34,10 @@ async function verifyToken(token: string) {
 /**
  * Создает новый JWT токен
  */
-async function createToken(): Promise<string> {
+async function createToken(userId: number, email: string): Promise<string> {
   const exp = Math.floor(Date.now() / 1000) + SESSION_DURATION
   
-  return new SignJWT({ isAdmin: true })
+  return new SignJWT({ userId, email, isAdmin: true })
     .setProtectedHeader({ alg: 'HS256' })
     .setExpirationTime(exp)
     .setIssuedAt()
@@ -72,7 +80,7 @@ export async function middleware(request: NextRequest) {
     const timeRemaining = exp - now
     
     if (timeRemaining < REFRESH_THRESHOLD && timeRemaining > 0) {
-      const newToken = await createToken()
+      const newToken = await createToken(payload.userId, payload.email)
       const response = NextResponse.next()
       
       response.cookies.set(SESSION_COOKIE, newToken, {

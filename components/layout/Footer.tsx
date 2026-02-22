@@ -1,22 +1,22 @@
 import Link from "next/link";
-import { Phone, MessageCircle } from "lucide-react";
-
-const catalogLinks = [
-  { href: "/catalog/excavators", label: "Экскаваторы" },
-  { href: "/catalog/cranes", label: "Автокраны" },
-  { href: "/catalog/loaders", label: "Погрузчики" },
-  { href: "/catalog/dump-trucks", label: "Самосвалы" },
-];
+import { Phone } from "lucide-react";
+import { TelegramIcon, WhatsAppIcon } from "@/components/shared";
+import type { SiteSettings } from "@/lib/settings-types";
+import { formatPhoneForLink } from "@/lib/settings-types";
 
 const clientLinks = [
-  { href: "/catalog", label: "Цены" },
-  { href: "/terms", label: "Договор аренды" },
-  { href: "/careers", label: "Вакансии" },
+  { href: "/terms", label: "Условия" },
   { href: "/contacts", label: "Контакты" },
 ];
 
-export function Footer() {
+interface FooterProps {
+  settings: SiteSettings;
+  catalogLinks?: { href: string; label: string }[];
+}
+
+export function Footer({ settings, catalogLinks = [] }: FooterProps) {
   const currentYear = new Date().getFullYear();
+  const phoneLink = formatPhoneForLink(settings.phone);
 
   return (
     <>
@@ -24,11 +24,12 @@ export function Footer() {
         <div className="container mx-auto px-4 grid md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div>
-            <Link href="/" className="font-display font-bold text-2xl uppercase mb-4 block">
-              Iron Rent
+            <Link href="/" className="flex items-center gap-2 mb-4">
+              <img src="/planteo.svg" alt="Плантео" className="w-10 h-10" />
+              <span className="font-display font-bold text-2xl uppercase">Плантео</span>
             </Link>
             <p className="text-text-gray text-sm">
-              Профессиональная аренда спецтехники в Санкт-Петербурге и
+              Planteo — профессиональная аренда спецтехники в Санкт-Петербурге и
               Ленинградской области.
             </p>
           </div>
@@ -65,47 +66,70 @@ export function Footer() {
           <div>
             <h4 className="font-bold uppercase mb-4 text-sm">Контакты</h4>
             <a
-              href="tel:+78129990000"
+              href={`tel:${phoneLink}`}
               className="text-xl font-display font-bold mb-2 block hover:text-accent transition-colors"
             >
-              +7 (812) 999-00-00
+              {settings.phone}
             </a>
             <a
-              href="mailto:spb@iron-rent.ru"
+              href={`mailto:${settings.email}`}
               className="text-sm text-text-gray hover:text-accent transition-colors block"
             >
-              spb@iron-rent.ru
+              {settings.email}
             </a>
             <address className="text-sm text-text-gray mt-2 not-italic">
-              ул. Строителей 15, офис 204
+              {settings.address}
             </address>
+            
+            {/* Реквизиты */}
+            <div className="mt-4 pt-4 border-t border-white/5">
+              <p className="text-xs text-gray-500 leading-relaxed">
+                ООО «Плантео»<br />
+                ИНН: 7805777882<br />
+                ОГРН: 1217800054592
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Copyright */}
         <div className="container mx-auto px-4 text-center border-t border-white/5 pt-8 text-xs text-gray-600">
-          © {currentYear} IRON RENT. Все права защищены.
+          <p>© {currentYear} Planteo. Все права защищены.</p>
+          <p className="mt-2 text-gray-500">ООО «Плантео» | ИНН: 7805777882 | ОГРН: 1217800054592</p>
         </div>
       </footer>
 
       {/* Sticky Bottom Bar (Mobile Only) */}
       <div className="md:hidden fixed bottom-0 left-0 w-full bg-dark/95 backdrop-blur border-t border-white/10 p-4 z-50 flex gap-3">
         <a
-          href="tel:+78129990000"
-          className="flex-1 bg-surface border border-white/20 text-white font-bold py-3 rounded flex items-center justify-center gap-2"
+          href={`tel:${phoneLink}`}
+          className="flex-1 bg-accent text-dark font-bold py-3 rounded flex items-center justify-center gap-2"
         >
           <Phone size={18} />
           Позвонить
         </a>
-        <a
-          href="https://wa.me/78129990000"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 bg-green-600 text-white font-bold py-3 rounded flex items-center justify-center gap-2 shadow-glow"
-        >
-          <MessageCircle size={18} />
-          WhatsApp
-        </a>
+        {settings.whatsappUrl && (
+          <a
+            href={settings.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-14 h-12 bg-[#25D366] text-white font-bold rounded flex items-center justify-center shrink-0"
+            aria-label="WhatsApp"
+          >
+            <WhatsAppIcon size={22} />
+          </a>
+        )}
+        {settings.telegramUrl && (
+          <a
+            href={settings.telegramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-14 h-12 bg-[#0088cc] text-white font-bold rounded flex items-center justify-center shrink-0"
+            aria-label="Telegram"
+          >
+            <TelegramIcon size={22} />
+          </a>
+        )}
       </div>
     </>
   );

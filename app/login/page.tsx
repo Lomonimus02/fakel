@@ -114,7 +114,7 @@ export default function LoginPage() {
 
           {/* Подпись */}
           <p className="text-center text-xs text-text-gray mt-8">
-            Iron Rent — Аренда спецтехники
+            Planteo — Аренда спецтехники
           </p>
         </div>
       </div>
