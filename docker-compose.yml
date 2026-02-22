@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      target: runner
     container_name: ironrent-app
     restart: unless-stopped
     ports:
@@ -18,16 +20,17 @@ services:
 
   # Одноразовый контейнер для миграций
   migrate:
-    build: .
+    build:
+      context: .
+      target: migrator
     container_name: ironrent-migrate
-    env_file:
-      - .env
     environment:
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/ironrent?schema=public
-    command: node ./node_modules/prisma/build/index.js migrate deploy
     depends_on:
       postgres:
         condition: service_started
+    profiles:
+      - tools
 
   postgres:
     image: postgres:16-alpine
