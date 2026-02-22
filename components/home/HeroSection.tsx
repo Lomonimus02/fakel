@@ -79,7 +79,7 @@ export function HeroSection() {
           {/* CTA */}
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full cursor-pointer rounded-lg bg-accent px-8 py-5 font-display text-xl font-bold uppercase text-dark shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-transform hover:scale-105 md:w-max"
+            className="w-full cursor-pointer rounded-lg bg-accent px-8 py-5 font-display text-xl font-bold uppercase text-dark shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-transform lg:hover:scale-105 active:scale-95 lg:active:scale-100 md:w-max"
           >
             Подобрать технику за 5 минут
           </button>
@@ -101,10 +101,10 @@ export function HeroSection() {
               <Link
                 key={href}
                 href={href}
-                className="group flex items-center gap-4 rounded-xl border border-white/5 bg-[#1A1D24] p-6 backdrop-blur-md transition-all hover:border-accent/50 hover:shadow-[0_0_15px_rgba(255,215,0,0.1)]"
+                className="group flex items-center gap-4 rounded-xl border border-white/5 bg-[#1A1D24] p-6 backdrop-blur-md transition-all lg:hover:border-accent/50 lg:hover:shadow-[0_0_15px_rgba(255,215,0,0.1)]"
               >
-                <Icon className="h-10 w-10 flex-shrink-0 text-accent transition-colors group-hover:text-accent" />
-                <span className="font-display text-xl font-bold uppercase tracking-wide text-white transition-colors group-hover:text-white">
+                <Icon className="h-10 w-10 flex-shrink-0 text-accent transition-colors lg:group-hover:text-accent" />
+                <span className="font-display text-xl font-bold uppercase tracking-wide text-white transition-colors lg:group-hover:text-white">
                   {label}
                 </span>
               </Link>
@@ -121,10 +121,10 @@ export function HeroSection() {
               <Link
                 key={href}
                 href={href}
-                className="group flex items-center gap-4 rounded-xl border border-white/5 bg-[#1A1D24] p-6 backdrop-blur-md transition-all hover:border-accent/50 hover:shadow-[0_0_15px_rgba(255,215,0,0.1)]"
+                className="group flex items-center gap-4 rounded-xl border border-white/5 bg-[#1A1D24] p-6 backdrop-blur-md transition-all active:bg-white/5"
               >
-                <Icon className="h-10 w-10 flex-shrink-0 text-accent transition-colors group-hover:text-accent" />
-                <span className="font-display text-xl font-bold uppercase tracking-wide text-white transition-colors group-hover:text-white">
+                <Icon className="h-10 w-10 flex-shrink-0 text-accent" />
+                <span className="font-display text-xl font-bold uppercase tracking-wide text-white">
                   {label}
                 </span>
               </Link>

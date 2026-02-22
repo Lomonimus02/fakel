@@ -241,7 +241,7 @@ ${comment ? `Комментарий: ${comment}` : ''}`
                   setComment('')
                   setCalculatedPrice(0)
                 }}
-                className="bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-xl transition-colors"
+                className="bg-white/10 lg:hover:bg-white/20 text-white font-medium py-3 px-6 rounded-xl transition-colors"
               >
                 Повторный расчёт
               </button>
@@ -365,7 +365,7 @@ ${comment ? `Комментарий: ${comment}` : ''}`
                     className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all ${
                       paymentType === 'cash'
                         ? 'bg-accent text-dark'
-                        : 'bg-dark border border-white/10 text-white hover:border-accent/50'
+                        : 'bg-dark border border-white/10 text-white lg:hover:border-accent/50'
                     }`}
                   >
                     Нал
@@ -376,7 +376,7 @@ ${comment ? `Комментарий: ${comment}` : ''}`
                     className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all ${
                       paymentType === 'nds'
                         ? 'bg-accent text-dark'
-                        : 'bg-dark border border-white/10 text-white hover:border-accent/50'
+                        : 'bg-dark border border-white/10 text-white lg:hover:border-accent/50'
                     }`}
                   >
                     Безнал с НДС
@@ -416,7 +416,7 @@ ${comment ? `Комментарий: ${comment}` : ''}`
                     type="button"
                     onClick={() => handleShiftsChange(-1)}
                     disabled={shifts <= 1}
-                    className="w-12 h-12 bg-dark border border-white/10 rounded-xl flex items-center justify-center text-white hover:border-accent/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="w-12 h-12 bg-dark border border-white/10 rounded-xl flex items-center justify-center text-white lg:hover:border-accent/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     <Minus size={20} />
                   </button>
@@ -437,7 +437,7 @@ ${comment ? `Комментарий: ${comment}` : ''}`
                     type="button"
                     onClick={() => handleShiftsChange(1)}
                     disabled={shifts >= 30}
-                    className="w-12 h-12 bg-dark border border-white/10 rounded-xl flex items-center justify-center text-white hover:border-accent/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="w-12 h-12 bg-dark border border-white/10 rounded-xl flex items-center justify-center text-white lg:hover:border-accent/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     <Plus size={20} />
                   </button>
@@ -473,7 +473,7 @@ ${comment ? `Комментарий: ${comment}` : ''}`
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-8 bg-accent hover:bg-accent-hover text-dark font-display font-bold text-lg uppercase py-5 rounded-xl shadow-glow flex items-center justify-center gap-3 transition-all disabled:opacity-50 disabled:cursor-not-allowed animate-pulse hover:animate-none"
+              className="w-full mt-8 bg-accent lg:hover:bg-accent-hover text-dark font-display font-bold text-lg uppercase py-5 rounded-xl shadow-glow flex items-center justify-center gap-3 transition-all disabled:opacity-50 disabled:cursor-not-allowed animate-pulse lg:hover:animate-none"
             >
               {isSubmitting ? (
                 <>

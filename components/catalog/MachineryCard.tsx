@@ -113,10 +113,10 @@ export function MachineryCard({ machine }: MachineryCardProps) {
       ref={cardRef}
       id={machine.slug}
       href={`/catalog/${machine.category.slug}/${machine.slug}`}
-      className={`product-card group bg-surface rounded-xl p-6 relative overflow-hidden block transition-all duration-300 scroll-mt-24 border-2 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 hover:-translate-y-1 ${
+      className={`product-card group bg-surface rounded-xl p-6 relative overflow-hidden block transition-all duration-300 scroll-mt-24 border-2 shadow-lg shadow-black/20 lg:hover:shadow-xl lg:hover:shadow-black/30 lg:hover:-translate-y-1 active:scale-[0.98] lg:active:scale-100 ${
         isHighlighted 
           ? 'border-accent animate-pulse-once' 
-          : 'border-white/10 hover:border-accent'
+          : 'border-white/10 lg:hover:border-accent'
       }`}
     >
       {/* Бейджи (Собственник, ХИТ и т.д.) */}
@@ -144,14 +144,14 @@ export function MachineryCard({ machine }: MachineryCardProps) {
 
       {/* Изображение */}
       <div className="h-48 flex items-center justify-center relative mb-6">
-        <div className="absolute inset-0 bg-accent/20 blur-[60px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div className="absolute inset-0 bg-accent/20 blur-[60px] rounded-full opacity-0 lg:group-hover:opacity-100 transition-opacity"></div>
         {machine.imageUrl ? (
           <OptimizedImage
             src={machine.imageUrl}
             alt={`Аренда ${machine.category.name} ${machine.title} в Санкт-Петербурге`}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-contain relative z-10 group-hover:scale-105 transition-transform duration-300"
+            className="object-contain relative z-10 lg:group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-white/5 rounded-lg">
@@ -206,7 +206,7 @@ export function MachineryCard({ machine }: MachineryCardProps) {
             </span>
           </div>
         </div>
-        <span className="bg-white text-dark group-hover:bg-accent group-hover:scale-105 transition-all w-10 h-10 rounded-full flex items-center justify-center">
+        <span className="bg-white text-dark lg:group-hover:bg-accent lg:group-hover:scale-105 transition-all w-10 h-10 rounded-full flex items-center justify-center">
           <ArrowUpRight size={20} />
         </span>
       </div>

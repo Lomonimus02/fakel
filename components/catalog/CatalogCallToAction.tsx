@@ -60,7 +60,7 @@ export function CatalogCallToAction({ phone, phoneLink, variant = 'category' }: 
               {/* Кнопка звонка */}
               <a
                 href={`tel:${phoneLink}`}
-                className="group flex items-center justify-center gap-3 px-6 py-4 bg-accent hover:bg-accent-hover text-dark font-bold uppercase rounded-xl transition-all duration-200 shadow-lg shadow-accent/20 hover:shadow-accent/40"
+                className="group flex items-center justify-center gap-3 px-6 py-4 bg-accent lg:hover:bg-accent-hover text-dark font-bold uppercase rounded-xl transition-all duration-200 shadow-lg shadow-accent/20 lg:hover:shadow-accent/40"
               >
                 <Phone size={20} className="group-hover:animate-pulse" />
                 <span className="text-sm md:text-base">Позвонить диспетчеру</span>
@@ -69,10 +69,10 @@ export function CatalogCallToAction({ phone, phoneLink, variant = 'category' }: 
               {/* Кнопка заявки */}
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="group flex items-center justify-center gap-3 px-6 py-4 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-accent text-white font-bold uppercase rounded-xl transition-all duration-200"
+                className="group flex items-center justify-center gap-3 px-6 py-4 bg-white/5 lg:hover:bg-white/10 border border-white/20 lg:hover:border-accent text-white font-bold uppercase rounded-xl transition-all duration-200"
               >
                 <span className="text-sm md:text-base">Заказать подбор</span>
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={18} className="lg:group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>

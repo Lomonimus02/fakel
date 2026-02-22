@@ -18,7 +18,7 @@ export function OrderButton({ machineTitle, className }: OrderButtonProps) {
       <button
         onClick={() => setIsModalOpen(true)}
         className={cn(
-          "w-full py-4 px-6 bg-accent hover:bg-accent/90 hover:scale-[1.02] active:scale-[0.98] text-dark font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 text-lg shadow-lg shadow-accent/30",
+          "w-full py-4 px-6 bg-accent lg:hover:bg-accent/90 lg:hover:scale-[1.02] active:scale-[0.98] text-dark font-bold uppercase rounded-lg transition-all flex items-center justify-center gap-2 text-lg shadow-lg shadow-accent/30",
           className
         )}
       >

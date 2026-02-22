@@ -59,14 +59,16 @@ body {
   cursor: pointer;
 }
 
-.product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-  border-color: #FFD700;
-}
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    border-color: #FFD700;
+  }
 
-.product-card:hover .tech-img {
-  transform: scale(1.05) translateY(-5px);
+  .product-card:hover .tech-img {
+    transform: scale(1.05) translateY(-5px);
+  }
 }
 
 .tech-img {

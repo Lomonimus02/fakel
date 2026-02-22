@@ -34,10 +34,10 @@ export function CatalogCtaBlock() {
           {/* Кнопка */}
           <button
             onClick={() => setIsModalOpen(true)}
-            className="group shrink-0 flex items-center justify-center gap-2.5 px-6 py-3.5 bg-accent hover:bg-accent-hover text-dark font-bold uppercase text-sm rounded-xl transition-all duration-200 shadow-lg shadow-accent/15 hover:shadow-accent/30 cursor-pointer"
+            className="group shrink-0 flex items-center justify-center gap-2.5 px-6 py-3.5 bg-accent lg:hover:bg-accent-hover text-dark font-bold uppercase text-sm rounded-xl transition-all duration-200 shadow-lg shadow-accent/15 lg:hover:shadow-accent/30 cursor-pointer"
           >
             Заказать подбор
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight size={18} className="lg:group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

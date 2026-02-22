@@ -59,10 +59,10 @@ export function WhyUs() {
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="bg-surface rounded-xl border border-white/10 p-6 hover:border-accent/50 transition-all group text-center"
+              className="bg-surface rounded-xl border border-white/10 p-6 lg:hover:border-accent/50 transition-all group text-center"
             >
               {/* Icon */}
-              <div className={`w-16 h-16 ${stat.iconBg} rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
+              <div className={`w-16 h-16 ${stat.iconBg} rounded-xl flex items-center justify-center mx-auto mb-4 lg:group-hover:scale-110 transition-transform`}>
                 <stat.icon className={stat.iconColor} size={32} />
               </div>
 
