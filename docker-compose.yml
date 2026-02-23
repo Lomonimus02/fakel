@@ -63,9 +63,7 @@ services:
       "
 
   app:
-    build:
-      context: .
-      target: runner
+    image: ghcr.io/lomonimus02/planteo-app:latest  # <--- ВОТ СЮДА (всё маленькими буквами!)
     container_name: ironrent-app
     restart: unless-stopped
     ports:
