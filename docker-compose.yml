@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: sAC8PxTJLVNEe6h7mR5cKz1yZB4Fuvr9
       POSTGRES_DB: ironrent
     ports:
       - "5432:5432"
@@ -24,7 +24,7 @@ services:
     container_name: ironrent-migrate
     command: npx prisma migrate deploy
     environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/ironrent?schema=public
+      - DATABASE_URL=postgresql://postgres:sAC8PxTJLVNEe6h7mR5cKz1yZB4Fuvr9@postgres:5432/ironrent?schema=public
     depends_on:
       postgres:
         condition: service_healthy
@@ -73,7 +73,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/ironrent?schema=public
+      - DATABASE_URL=postgresql://postgres:sAC8PxTJLVNEe6h7mR5cKz1yZB4Fuvr9@postgres:5432/ironrent?schema=public
       - S3_ENDPOINT=http://minio:9000
     depends_on:
       migrate:
